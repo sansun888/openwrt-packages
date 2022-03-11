@@ -1,4 +1,4 @@
-local api = require "luci.model.cbi.passwall.api.api"
+local api = require "luci.model.cbi.passwall2.api.api"
 local appname = api.appname
 local uci = api.uci
 
@@ -63,9 +63,9 @@ s = m:section(NamedSection, arg[1], "nodes", "")
 s.addremove = false
 s.dynamic = false
 
-share = s:option(DummyValue, "passwall", " ")
+share = s:option(DummyValue, "passwall2", " ")
 share.rawhtml  = true
-share.template = "passwall/node_list/link_share_man"
+share.template = "passwall2/node_list/link_share_man"
 share.value = arg[1]
 
 remarks = s:option(Value, "remarks", translate("Node Remarks"))
@@ -73,9 +73,6 @@ remarks.default = translate("Remarks")
 remarks.rmempty = false
 
 type = s:option(ListValue, "type", translate("Type"))
-if api.is_finded("ipt2socks") then
-    type:value("Socks", translate("Socks"))
-end
 if api.is_finded("ss-redir") then
     type:value("SS", translate("Shadowsocks Libev"))
 end
@@ -93,17 +90,6 @@ if api.is_finded("xray") then
 end
 if api.is_finded("brook") then
     type:value("Brook", translate("Brook"))
-end
---[[
-if api.is_finded("trojan-plus") or api.is_finded("trojan") then
-    type:value("Trojan", translate("Trojan"))
-end
-]]--
-if api.is_finded("trojan-plus") then
-    type:value("Trojan-Plus", translate("Trojan-Plus"))
-end
-if api.is_finded("trojan-go") then
-    type:value("Trojan-Go", translate("Trojan-Go"))
 end
 if api.is_finded("naive") then
     type:value("Naiveproxy", translate("NaiveProxy"))
@@ -234,14 +220,10 @@ end
 
 address = s:option(Value, "address", translate("Address (Support Domain Name)"))
 address.rmempty = false
-address:depends("type", "Socks")
 address:depends("type", "SS")
 address:depends("type", "SS-Rust")
 address:depends("type", "SSR")
 address:depends("type", "Brook")
-address:depends("type", "Trojan")
-address:depends("type", "Trojan-Plus")
-address:depends("type", "Trojan-Go")
 address:depends("type", "Naiveproxy")
 address:depends("type", "Hysteria")
 address:depends({ type = "V2ray", protocol = "vmess" })
@@ -260,14 +242,10 @@ address:depends({ type = "Xray", protocol = "trojan" })
 --[[
 use_ipv6 = s:option(Flag, "use_ipv6", translate("Use IPv6"))
 use_ipv6.default = 0
-use_ipv6:depends("type", "Socks")
 use_ipv6:depends("type", "SS")
 use_ipv6:depends("type", "SS-Rust")
 use_ipv6:depends("type", "SSR")
 use_ipv6:depends("type", "Brook")
-use_ipv6:depends("type", "Trojan")
-use_ipv6:depends("type", "Trojan-Plus")
-use_ipv6:depends("type", "Trojan-Go")
 use_ipv6:depends("type", "Hysteria")
 use_ipv6:depends({ type = "V2ray", protocol = "vmess" })
 use_ipv6:depends({ type = "V2ray", protocol = "vless" })
@@ -286,14 +264,10 @@ use_ipv6:depends({ type = "Xray", protocol = "trojan" })
 port = s:option(Value, "port", translate("Port"))
 port.datatype = "port"
 port.rmempty = false
-port:depends("type", "Socks")
 port:depends("type", "SS")
 port:depends("type", "SS-Rust")
 port:depends("type", "SSR")
 port:depends("type", "Brook")
-port:depends("type", "Trojan")
-port:depends("type", "Trojan-Plus")
-port:depends("type", "Trojan-Go")
 port:depends("type", "Naiveproxy")
 port:depends("type", "Hysteria")
 port:depends({ type = "V2ray", protocol = "vmess" })
@@ -310,7 +284,6 @@ port:depends({ type = "Xray", protocol = "shadowsocks" })
 port:depends({ type = "Xray", protocol = "trojan" })
 
 username = s:option(Value, "username", translate("Username"))
-username:depends("type", "Socks")
 username:depends("type", "Naiveproxy")
 username:depends({ type = "V2ray", protocol = "http" })
 username:depends({ type = "V2ray", protocol = "socks" })
@@ -319,14 +292,10 @@ username:depends({ type = "Xray", protocol = "socks" })
 
 password = s:option(Value, "password", translate("Password"))
 password.password = true
-password:depends("type", "Socks")
 password:depends("type", "SS")
 password:depends("type", "SS-Rust")
 password:depends("type", "SSR")
 password:depends("type", "Brook")
-password:depends("type", "Trojan")
-password:depends("type", "Trojan-Plus")
-password:depends("type", "Trojan-Go")
 password:depends("type", "Naiveproxy")
 password:depends({ type = "V2ray", protocol = "http" })
 password:depends({ type = "V2ray", protocol = "socks" })
@@ -464,9 +433,6 @@ tcp_fast_open:value("true")
 tcp_fast_open:depends("type", "SS")
 tcp_fast_open:depends("type", "SS-Rust")
 tcp_fast_open:depends("type", "SSR")
-tcp_fast_open:depends("type", "Trojan")
-tcp_fast_open:depends("type", "Trojan-Plus")
-tcp_fast_open:depends("type", "Trojan-Go")
 
 ss_plugin = s:option(ListValue, "ss_plugin", translate("plugin"))
 ss_plugin:value("none", translate("none"))
@@ -502,15 +468,6 @@ uuid:depends({ type = "Xray", protocol = "vless" })
 
 tls = s:option(Flag, "tls", translate("TLS"))
 tls.default = 0
-tls.validate = function(self, value, t)
-    if value then
-        local type = type:formvalue(t) or ""
-        if value == "0" and (type == "Trojan" or type == "Trojan-Plus") then
-            return nil, translate("Original Trojan only supported 'tls', please choose 'tls'.")
-        end
-        return value
-    end
-end
 tls:depends({ type = "V2ray", protocol = "vmess" })
 tls:depends({ type = "V2ray", protocol = "vless" })
 tls:depends({ type = "V2ray", protocol = "socks" })
@@ -521,9 +478,6 @@ tls:depends({ type = "Xray", protocol = "vless" })
 tls:depends({ type = "Xray", protocol = "socks" })
 tls:depends({ type = "Xray", protocol = "trojan" })
 tls:depends({ type = "Xray", protocol = "shadowsocks" })
-tls:depends("type", "Trojan")
-tls:depends("type", "Trojan-Plus")
-tls:depends("type", "Trojan-Go")
 
 xtls = s:option(Flag, "xtls", translate("XTLS"))
 xtls.default = 0
@@ -549,27 +503,6 @@ alpn:value("http/1.1")
 alpn:depends({ type = "V2ray", tls = true })
 alpn:depends({ type = "Xray", tls = true })
 
--- [[ TLS部分 ]] --
-tls_sessionTicket = s:option(Flag, "tls_sessionTicket", translate("Session Ticket"))
-tls_sessionTicket.default = "0"
-tls_sessionTicket:depends({ type = "Trojan", tls = true })
-tls_sessionTicket:depends({ type = "Trojan-Plus", tls = true })
-tls_sessionTicket:depends({ type = "Trojan-Go", tls = true })
-
-trojan_go_fingerprint = s:option(ListValue, "trojan_go_fingerprint", translate("Finger Print"))
-trojan_go_fingerprint:value("disable", translate("Disable"))
-trojan_go_fingerprint:value("firefox")
-trojan_go_fingerprint:value("chrome")
-trojan_go_fingerprint:value("ios")
-trojan_go_fingerprint.default = "disable"
-trojan_go_fingerprint:depends({ type = "Trojan-Go", tls = true })
-function trojan_go_fingerprint.cfgvalue(self, section)
-	return m:get(section, "fingerprint")
-end
-function trojan_go_fingerprint.write(self, section, value)
-	m:set(section, "fingerprint", value)
-end
-
 tls_serverName = s:option(Value, "tls_serverName", translate("Domain"))
 tls_serverName:depends("tls", true)
 tls_serverName:depends("type", "Hysteria")
@@ -593,34 +526,6 @@ end
 function xray_fingerprint.write(self, section, value)
 	m:set(section, "fingerprint", value)
 end
-
-trojan_transport = s:option(ListValue, "trojan_transport", translate("Transport"))
-trojan_transport:value("original", translate("Original"))
-trojan_transport:value("ws", "WebSocket")
-trojan_transport.default = "original"
-trojan_transport:depends("type", "Trojan-Go")
-
-trojan_plugin = s:option(ListValue, "plugin_type", translate("Transport Plugin"))
-trojan_plugin:value("plaintext", "Plain Text")
-trojan_plugin:value("shadowsocks", "ShadowSocks")
-trojan_plugin:value("other", "Other")
-trojan_plugin.default = "plaintext"
-trojan_plugin:depends({ tls = false, trojan_transport = "original" })
-
-trojan_plugin_cmd = s:option(Value, "plugin_cmd", translate("Plugin Binary"))
-trojan_plugin_cmd.placeholder = "eg: /usr/bin/v2ray-plugin"
-trojan_plugin_cmd:depends({ plugin_type = "shadowsocks" })
-trojan_plugin_cmd:depends({ plugin_type = "other" })
-
-trojan_plugin_op = s:option(Value, "plugin_option", translate("Plugin Option"))
-trojan_plugin_op.placeholder = "eg: obfs=http;obfs-host=www.baidu.com"
-trojan_plugin_op:depends({ plugin_type = "shadowsocks" })
-trojan_plugin_op:depends({ plugin_type = "other" })
-
-trojan_plugin_arg = s:option(DynamicList, "plugin_arg", translate("Plugin Option Args"))
-trojan_plugin_arg.placeholder = "eg: [\"-config\", \"test.json\"]"
-trojan_plugin_arg:depends({ plugin_type = "shadowsocks" })
-trojan_plugin_arg:depends({ plugin_type = "other" })
 
 transport = s:option(ListValue, "transport", translate("Transport"))
 transport:value("tcp", "TCP")
@@ -706,12 +611,10 @@ mkcp_seed:depends("transport", "mkcp")
 ws_host = s:option(Value, "ws_host", translate("WebSocket Host"))
 ws_host:depends("transport", "ws")
 ws_host:depends("ss_transport", "ws")
-ws_host:depends("trojan_transport", "ws")
 
 ws_path = s:option(Value, "ws_path", translate("WebSocket Path"))
 ws_path:depends("transport", "ws")
 ws_path:depends("ss_transport", "ws")
-ws_path:depends("trojan_transport", "ws")
 ws_path:depends({ type = "Brook", brook_protocol = "wsclient" })
 
 ws_enableEarlyData = s:option(Flag, "ws_enableEarlyData", translate("Enable early data"))
@@ -792,24 +695,6 @@ grpc_permit_without_stream:depends("grpc_health_check", true)
 grpc_initial_windows_size = s:option(Value, "grpc_initial_windows_size", translate("Initial Windows Size"))
 grpc_initial_windows_size.default = "0"
 grpc_initial_windows_size:depends({ type = "Xray", transport = "grpc"})
-
--- [[ Trojan-Go Shadowsocks2 ]] --
-ss_aead = s:option(Flag, "ss_aead", translate("Shadowsocks secondary encryption"))
-ss_aead:depends("type", "Trojan-Go")
-ss_aead.default = "0"
-
-ss_aead_method = s:option(ListValue, "ss_aead_method", translate("Encrypt Method"))
-for _, v in ipairs(encrypt_methods_ss_aead) do ss_aead_method:value(v, v) end
-ss_aead_method.default = "aes-128-gcm"
-ss_aead_method:depends("ss_aead", "1")
-
-ss_aead_pwd = s:option(Value, "ss_aead_pwd", translate("Password"))
-ss_aead_pwd.password = true
-ss_aead_pwd:depends("ss_aead", "1")
-
--- [[ Trojan-Go Mux ]]--
-mux = s:option(Flag, "smux", translate("Smux"))
-mux:depends("type", "Trojan-Go")
 
 -- [[ Mux ]]--
 mux = s:option(Flag, "mux", translate("Mux"))
