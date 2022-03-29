@@ -18,7 +18,7 @@
 
 * [small-package warehouse address](https://github.com/kenzok8/small-package)
 
-* The software synchronizes the Dashen library updates from time to time, suitable for one-click download for openwrt compilation
+* The software syn the updates from to time, suitable for one-click download for openwrt compilation
 
 
 ##### Plugin update download:
