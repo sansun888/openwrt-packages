@@ -10,7 +10,9 @@
 
 <img src="https://v2.jinrishici.com/one.svg?font-size=24&spacing=2&color=Black">
 
-#### 说明 <br>中文 | [English](README_en.md)
+#### 说明 
+
+<br>中文 | [English](README_en.md)
 
 * 喜欢追新的可以去下载small-package，该仓库每天自动同步更新
 
