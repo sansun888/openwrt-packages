@@ -10,7 +10,7 @@
 
 <img src="https://v2.jinrishici.com/one.svg?font-size=24&spacing=2&color=Black">
 
-<br>English | [简体中文](README_ZH.md)
+<br>English | [简体中文](README.md)
 
 ##### illustrate
 
