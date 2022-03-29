@@ -43,6 +43,7 @@ make menuconfig
 ```
 
 - openwrt firmware to compile custom themes and software
+- 
 | software name                | illustrate               | Chinese description       |
 | -----------------------------|------------------------| ------------|
 | luci-app-vssr                | vssr proxy                 | vssr老竭力代理软件        |
