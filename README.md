@@ -40,6 +40,7 @@ make menuconfig
 ```
 
 - openwrt 固件编译自定义主题与软件
+
 | 软件名                       | 说明                   | 中文说明    |
 | -----------------------------|------------------------| ------------|
 | luci-app-vssr                | vssr proxy                 | vssr老竭力代理软件        |
@@ -65,6 +66,7 @@ make menuconfig
 | luci-app-unblockneteasemusic | Unlock NetEase Cloud Music         | 解锁网易云音乐   |
 | luci-app-gpsysupgrade        | kiddin9 custom firmware upgrade plugin           |kiddin9自定义固件升级 |
 | luci-app-aliyundrive-webdav  | Aliyun Disk WebDAV Service            |  阿里云盘 WebDAV 服务   |
+
 * 修改argon为argonne，包括argonne-config，为防止同名argon，而影响编译
 
 ![暗黄主题](https://raw.githubusercontent.com/kenzok8/kenzok8/main/screenshot/sshot-9.jpg)
@@ -79,7 +81,6 @@ make menuconfig
 ![抹茶绿主题](https://raw.githubusercontent.com/kenzok8/kenzok8/main/screenshot/sshot-14.jpg)
 ![argon主题](https://raw.githubusercontent.com/kenzok8/kenzok8/main/screenshot/sshot-1.png)
 ![argon主题](https://raw.githubusercontent.com/kenzok8/kenzok8/main/screenshot/sshot-2.png)
-* 修复opentomato 与opentomcat修改主机名无效的bug
 ![修复tomto不能修改主机名的bug](https://raw.githubusercontent.com/kenzok8/kenzok8/main/screenshot/%E5%B0%8F%E7%8C%AA%E5%AE%B6-719.png)
 ![修复tomto不能修改主机名的bug](https://raw.githubusercontent.com/kenzok8/kenzok8/main/screenshot/%E5%B0%8F%E7%8C%AA%E5%AE%B6-722.png)
 ![修复cat不能修改主机名的bug](https://raw.githubusercontent.com/kenzok8/kenzok8/main/screenshot/%E5%B0%8F%E7%8C%AA%E5%AE%B6-720.png)
