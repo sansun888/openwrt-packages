@@ -50,7 +50,7 @@ make menuconfig
 | luci-app-openclash           | openclash proxy            |  clash的图形代理软件      |
 | luci-app-advanced            | System advanced settings               | 系统高级设置        |
 | luci-app-pushbot             | WeChat/DingTalk Pushed plugins    |   微信/钉钉推送        |
-| luci-theme-atmaterial_new    | atmaterial three-in-one theme (adapted to luci-18.06) | Atmaterial 三合一主题        |
+| luci-theme-atmaterial_new    | atmaterial theme (adapted to luci-18.06) | Atmaterial 三合一主题        |
 | luci-app-aliddns             | aliyunddns         |   阿里云ddns插件      |
 | luci-app-eqos                | Speed ​​limit by IP address       | 依IP地址限速      |
 | luci-app-gost                | https proxy      | 隐蔽的https代理   |
